@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Calendar</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 48px;
+            /* Space between form and calendar */
+        }
+
+        .header {
+            font-weight: bold;
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .day {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-height: 100px;
+            /* Minimum height for each cell */
+            cursor: text;
+            /* Change cursor to indicate editable area */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="mt-5">Event Calendar</h1>
+
+        <form method="POST" action="/add_events">
+            <div class="calendar">
+                <div class="header">Sun</div>
+                <div class="header">Mon</div>
+                <div class="header">Tue</div>
+                <div class="header">Wed</div>
+                <div class="header">Thu</div>
+                <div class="header">Fri</div>
+                <div class="header">Sat</div>
+
+                {# Render 6x7 grid with editable cells for events #}
+                {% for day in range(42) %}
+                <div class="day" contenteditable="true" data-day="{{ day }}" onblur="saveEvent(this)">
+                    <ul>
+                        {% if day in events %}
+                        {% for event in events[day] %}
+                        <li>{{ event }}</li>
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Save Events</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
