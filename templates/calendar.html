@@ -43,11 +43,10 @@
 </head>
 
 <body>
-
     <div class="container">
         <h1 class="mt-5">Event Calendar</h1>
 
-        <form method="POST" action="/add_events">
+        <form method="POST" action="/add_events" id="eventForm">
             <div class="calendar">
                 <div class="header">Sun</div>
                 <div class="header">Mon</div>
@@ -59,20 +58,45 @@
 
                 {# Render 6x7 grid with editable cells for events #}
                 {% for day in range(42) %}
-                <div class="day" contenteditable="true" data-day="{{ day }}" onblur="saveEvent(this)">
-                    <ul>
-                        {% if day in events %}
-                        {% for event in events[day] %}
-                        <li>{{ event }}</li>
-                        {% endfor %}
-                        {% endif %}
-                    </ul>
+                <div class="day" contenteditable="true" data-day="{{ day }}">
+                    {% if day in events %}
+                        <span>{{ events[day] }}</span>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Save Events</button>
+            <button type="submit" onclick="collectEventData()" class="btn btn-primary mt-3">Save Events</button>
         </form>
     </div>
+
+    <script>
+        function collectEventData() {
+            const form = document.getElementById('eventForm');
+
+            // Clear any existing hidden inputs
+            document.querySelectorAll('input[name="events[]"]').forEach(input => input.remove());
+
+            // Loop through each day cell and get its content
+            document.querySelectorAll('.day').forEach(dayCell => {
+                const dayNumber = dayCell.getAttribute('data-day');
+                const eventText = dayCell.innerText.trim();
+
+                if (eventText) {  // Only add non-empty events
+                    // Create a hidden input for each event
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = dayNumber;  // Use day number as key
+                    input.value = eventText;
+
+                    // Append the input to the form
+                    form.appendChild(input);
+                }
+            });
+
+            // Submit the form with populated hidden inputs
+            form.submit();
+        }
+    </script>
 
 </body>
 
