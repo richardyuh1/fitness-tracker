@@ -57,8 +57,8 @@
                 {# Render 6x7 grid with editable cells for events #}
                 {% for day in range(42) %}
                 <div class="day" contenteditable="true" data-day="{{ day }}">
-                    {% if day in events %}
-                        <span>{{ events[day] }}</span>
+                    {% if day|string in events %}
+                        <span>{{ events[day|string] }}</span>
                     {% endif %}
                 </div>
                 {% endfor %}
